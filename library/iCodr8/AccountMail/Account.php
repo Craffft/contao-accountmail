@@ -154,13 +154,6 @@ abstract class Account extends \Controller
 
         switch ($strType) {
             case 'emailNewMember':
-                $arrParameters['firstname'] = $dc->activeRecord->firstname;
-                $arrParameters['lastname'] = $dc->activeRecord->lastname;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
-                break;
-
             case 'emailChangedMemberPassword':
                 $arrParameters['firstname'] = $dc->activeRecord->firstname;
                 $arrParameters['lastname'] = $dc->activeRecord->lastname;
@@ -170,12 +163,6 @@ abstract class Account extends \Controller
                 break;
 
             case 'emailNewUser':
-                $arrParameters['name'] = $dc->activeRecord->name;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
-                break;
-
             case 'emailChangedUserPassword':
                 $arrParameters['name'] = $dc->activeRecord->name;
                 $arrParameters['email'] = $dc->activeRecord->email;

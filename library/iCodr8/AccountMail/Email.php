@@ -12,8 +12,6 @@
 
 namespace iCodr8\AccountMail;
 
-use TranslationFields\TranslationFields;
-
 class Email
 {
     protected $strType;
@@ -101,14 +99,14 @@ class Email
     protected function getSubject()
     {
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'])) {
-            return TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'], $this->strForceLanguage);
+            return \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'], $this->strForceLanguage);
         }
     }
 
     protected function getContent()
     {
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Content'])) {
-            return TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Content'], $this->strForceLanguage);
+            return \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Content'], $this->strForceLanguage);
         }
     }
 

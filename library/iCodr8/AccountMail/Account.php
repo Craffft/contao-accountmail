@@ -12,10 +12,42 @@
 
 namespace iCodr8\AccountMail;
 
-class Account extends \Controller
+abstract class Account extends \Controller
 {
+    /**
+     * @var array
+     */
+    protected $arrParameters = array();
+
+    /**
+     * @param \DataContainer $dc
+     * @return mixed
+     */
+    abstract protected function disableAccountMail(\DataContainer $dc);
+
+    /**
+     * @param \DataContainer $dc
+     */
+    public function handlePalettes(\DataContainer $dc)
+    {
+        if ($this->disableAccountMail($dc)) {
+            if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
+                foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
+                    $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(',sendLoginData', '', $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param \DataContainer $dc
+     */
     public function setAutoPassword(\DataContainer $dc)
     {
+        if ($this->disableAccountMail($dc)) {
+            return;
+        }
+
         if (\Input::post('password') !== null && \Input::post('password') == '') {
             $strModel = \Model::getClassFromTable($dc->table);
             $objAccount = $strModel::findByPk($dc->id);
@@ -34,8 +66,15 @@ class Account extends \Controller
         }
     }
 
+    /**
+     * @param \DataContainer $dc
+     */
     public function sendPasswordEmail(\DataContainer $dc)
     {
+        if ($this->disableAccountMail($dc)) {
+            return;
+        }
+
         // Return if there is no active record
         if (!$dc->activeRecord) {
             return;
@@ -52,42 +91,63 @@ class Account extends \Controller
             }
 
             if (\Input::post('password') != '' && \Input::post('password') != '*****') {
-                $objEmail = new \Email();
-                $objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-                $objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+                $strType = $this->getType($dc);
+                $arrParameters = $this->getParameters($dc);
 
-                // Password changed the first time
-                if ($dc->activeRecord->login == 1) {
-                    $strSubject = 'TODO';
-                    $strText = 'TODO';
-                } else {
-                    $strSubject = 'TODO';
-                    $strText = 'TODO';
+                if (!strlen($strType)) {
+                    return;
                 }
 
-                $objEmail->subject = $this->replaceParameters($dc, $strSubject);
-                $objEmail->text = $this->replaceParameters($dc, $strText);
+                if ($this->sendEmail($dc->activeRecord->email, $strType, $arrParameters)) {
+                    // Disable sendLoginData field
+                    $dc->activeRecord->sendLoginData = '';
 
-                // Send email
-                $objEmail->sendTo($dc->activeRecord->email);
+                    // Disable sendLoginData field in the database
+                    \Database::getInstance()->prepare("UPDATE " . $dc->table . " SET sendLoginData='', loginDataAlreadySent='1' WHERE id=?")->execute($dc->activeRecord->id);
 
-                // Disable sendLoginData field
-                $dc->activeRecord->sendLoginData = '';
-
-                // Disable sendLoginData field in the database
-                \Database::getInstance()->prepare("UPDATE " . $dc->table . " SET sendLoginData='' WHERE id=?")->execute($dc->activeRecord->id);
-
-                // Show success message
-                \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['login_data_send']);
+                    // Show success message
+                    \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['login_data_send']);
+                } else {
+                    // Show error message
+                    \Message::addError($GLOBALS['TL_LANG']['MSC']['login_data_not_send']);
+                }
             }
         }
     }
 
+    protected function getType(\DataContainer $dc)
+    {
+        $strType = 'emailNew%s';
+
+        if ($dc->activeRecord->loginDataAlreadySent) {
+            $strType = 'emailChanged%sPassword';
+        }
+
+        switch ($dc->table) {
+            case 'tl_member':
+                $strType = sprintf($strType, 'Member');
+                break;
+
+            case 'tl_user':
+                $strType = sprintf($strType, 'User');
+                break;
+
+            default:
+                return;
+        }
+
+        return $strType;
+    }
+
+    /**
+     * @param \DataContainer $dc
+     * @return array
+     */
     protected function getParameters(\DataContainer $dc)
     {
         $arrParameters = array();
-        $arrParameters['host'] = \Idna::decode(\Environment::get('host'));
-        $arrParameters['admin_name'] = \BackendUser::getInstance()->name;
+
+        // TODO ADD PARAMS FROM MEMBER AND USER HERE
 
         // HOOK: replaceAccountMailParameters
         if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']))
@@ -109,16 +169,23 @@ class Account extends \Controller
         return $arrParameters;
     }
 
-    protected function replaceParameters(\DataContainer $dc, $strText)
+    /**
+     * @param $strRecipient
+     * @param $strType
+     * @param $arrParameters
+     * @return bool
+     */
+    protected function sendEmail($strRecipient, $strType, $arrParameters)
     {
-        $arrParameters = $this->getParameters($dc);
+        $objEmail = new Email($strType);
 
         if (is_array($arrParameters)) {
-            foreach ($arrParameters as $key => $varValue) {
-                $strText = str_replace('{{' . $key . '}}', $varValue, $strText);
+            foreach ($arrParameters as $k => $v) {
+                $objEmail->addParameter($k, $v);
             }
         }
 
-        return $strText;
+        // Send email
+        return $objEmail->sendTo($strRecipient);
     }
 }

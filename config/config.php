@@ -11,6 +11,29 @@
  */
 
 /**
+ * EMAIL CONFIGURATION
+ */
+$GLOBALS['TL_EMAIL'] = array
+(
+    'emailNewMember' => array
+    (
+        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
+    ),
+    'emailChangedMemberPassword' => array
+    (
+        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
+    ),
+    'emailNewUser' => array
+    (
+        'parameters' => array('name', 'email', 'username', 'password')
+    ),
+    'emailChangedUserPassword' => array
+    (
+        'parameters' => array('name', 'email', 'username', 'password')
+    )
+);
+
+/**
  * BACK END MODULES
  *
  * Back end modules are stored in a global array called "BE_MOD". You can add
@@ -36,6 +59,10 @@
  * have to be set. Take a look at the system/modules/core/config/config.php
  * file to see how back end modules are configured.
  */
+$GLOBALS['BE_MOD']['content']['email'] = array
+(
+    'tables' => array('tl_email')
+);
 
 /**
  * FRONT END MODULES

@@ -14,3 +14,4 @@
  * Miscellaneous
  */
 $GLOBALS['TL_LANG']['MSC']['login_data_send'] = 'Die neuen Zugangsdaten wurden per E-Mail zugesendet.';
+$GLOBALS['TL_LANG']['MSC']['login_data_not_send'] = 'Die neuen Zugangsdaten konnten leider nicht per E-Mail zugesendet werden.';

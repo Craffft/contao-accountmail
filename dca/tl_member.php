@@ -11,8 +11,9 @@
  */
 
 // Config
-$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('iCodr8\\AccountMail\\Account', 'setAutoPassword');
-$GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'][] = array('iCodr8\\AccountMail\\Account', 'sendPasswordEmail');
+$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'handlePalettes');
+$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'setAutoPassword');
+$GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'sendPasswordEmail');
 
 // Palettes
 if (is_array($GLOBALS['TL_DCA']['tl_member']['palettes'])) {
@@ -29,5 +30,11 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['sendLoginData'] = array
     'default'                 => 1,
     'inputType'               => 'checkbox',
     'eval'                    => array('tl_class'=>'w50'),
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_member']['fields']['loginDataAlreadySent'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_member']['loginDataAlreadySent'],
     'sql'                     => "char(1) NOT NULL default ''"
 );

@@ -61,7 +61,8 @@ $GLOBALS['TL_EMAIL'] = array
  */
 $GLOBALS['BE_MOD']['content']['email'] = array
 (
-    'tables' => array('tl_email')
+    'tables' => array('tl_email'),
+    'icon'   => 'system/modules/accountmail/assets/images/email.png'
 );
 
 /**

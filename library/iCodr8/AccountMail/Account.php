@@ -93,12 +93,13 @@ abstract class Account extends \Controller
             if (\Input::post('password') != '' && \Input::post('password') != '*****') {
                 $strType = $this->getType($dc);
                 $arrParameters = $this->getParameters($dc);
+                $strLanguage = $this->getAccountLanguage($dc);
 
                 if (!strlen($strType)) {
                     return;
                 }
 
-                if ($this->sendEmail($dc->activeRecord->email, $strType, $arrParameters)) {
+                if ($this->sendEmail($dc->activeRecord->email, $strType, $arrParameters, $strLanguage)) {
                     // Disable sendLoginData field
                     $dc->activeRecord->sendLoginData = '';
 
@@ -192,12 +193,25 @@ abstract class Account extends \Controller
     }
 
     /**
+     * @param \DataContainer $dc
+     * @return mixed
+     */
+    protected function getAccountLanguage(\DataContainer $dc)
+    {
+        if ($dc->activeRecord->langauge) {
+            return $dc->activeRecord->langauge;
+        }
+
+        return;
+    }
+
+    /**
      * @param $strRecipient
      * @param $strType
      * @param $arrParameters
      * @return bool
      */
-    protected function sendEmail($strRecipient, $strType, $arrParameters)
+    protected function sendEmail($strRecipient, $strType, $arrParameters, $strForceLanguage = null)
     {
         $objEmail = new Email($strType);
 

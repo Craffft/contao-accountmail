@@ -28,5 +28,4 @@ ClassLoader::addClasses(array
     'iCodr8\AccountMail\Member\Account' => 'system/modules/accountmail/library/iCodr8/AccountMail/Member/Account.php',
     'iCodr8\AccountMail\User\Account'   => 'system/modules/accountmail/library/iCodr8/AccountMail/User/Account.php',
     'iCodr8\AccountMail\Email'          => 'system/modules/accountmail/library/iCodr8/AccountMail/Email.php',
-    'iCodr8\AccountMail\Hooks'          => 'system/modules/accountmail/library/iCodr8/AccountMail/Hooks.php',
 ));

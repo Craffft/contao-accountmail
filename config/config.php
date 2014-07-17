@@ -265,7 +265,6 @@ $GLOBALS['BE_MOD']['content']['email'] = array
  * source code by registering callback functions to be executed on a particular
  * event. For more information see https://contao.org/manual.html.
  */
-$GLOBALS['TL_HOOKS']['replaceAccountMailParameters'][] = array('iCodr8\\AccountMail\\Hooks', 'replaceAccountMailParameters');
 
 /**
  * AUTO ITEMS

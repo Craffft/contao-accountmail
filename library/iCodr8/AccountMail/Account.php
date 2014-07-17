@@ -115,6 +115,10 @@ abstract class Account extends \Controller
         }
     }
 
+    /**
+     * @param \DataContainer $dc
+     * @return string
+     */
     protected function getType(\DataContainer $dc)
     {
         $strType = 'emailNew%s';
@@ -146,8 +150,39 @@ abstract class Account extends \Controller
     protected function getParameters(\DataContainer $dc)
     {
         $arrParameters = array();
+        $strType = $this->getType($dc);
 
-        // TODO ADD PARAMS FROM MEMBER AND USER HERE
+        switch ($strType) {
+            case 'emailNewMember':
+                $arrParameters['firstname'] = $dc->activeRecord->firstname;
+                $arrParameters['lastname'] = $dc->activeRecord->lastname;
+                $arrParameters['email'] = $dc->activeRecord->email;
+                $arrParameters['username'] = $dc->activeRecord->username;
+                $arrParameters['password'] = \Input::post('password');
+                break;
+
+            case 'emailChangedMemberPassword':
+                $arrParameters['firstname'] = $dc->activeRecord->firstname;
+                $arrParameters['lastname'] = $dc->activeRecord->lastname;
+                $arrParameters['email'] = $dc->activeRecord->email;
+                $arrParameters['username'] = $dc->activeRecord->username;
+                $arrParameters['password'] = \Input::post('password');
+                break;
+
+            case 'emailNewUser':
+                $arrParameters['name'] = $dc->activeRecord->name;
+                $arrParameters['email'] = $dc->activeRecord->email;
+                $arrParameters['username'] = $dc->activeRecord->username;
+                $arrParameters['password'] = \Input::post('password');
+                break;
+
+            case 'emailChangedUserPassword':
+                $arrParameters['name'] = $dc->activeRecord->name;
+                $arrParameters['email'] = $dc->activeRecord->email;
+                $arrParameters['username'] = $dc->activeRecord->username;
+                $arrParameters['password'] = \Input::post('password');
+                break;
+        }
 
         // HOOK: replaceAccountMailParameters
         if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']))
@@ -157,11 +192,11 @@ abstract class Account extends \Controller
                 if (is_array($callback))
                 {
                     $this->import($callback[0]);
-                    $arrParameters = $this->$callback[0]->$callback[1]($dc, $arrParameters);
+                    $arrParameters = $this->$callback[0]->$callback[1]($strType, $arrParameters, $dc);
                 }
                 elseif (is_callable($callback))
                 {
-                    $arrParameters = $callback($dc, $arrParameters);
+                    $arrParameters = $callback($strType, $arrParameters, $dc);
                 }
             }
         }

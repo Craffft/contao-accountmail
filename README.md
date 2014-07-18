@@ -8,7 +8,7 @@ In the backend, the email contents can be changed.
 
 Hooks
 -----
-```
+```php
 $GLOBALS['TL_HOOKS']['replaceAccountMailParameters'][] = array('Hooks', 'replaceAccountMailParameters');
 
 /**

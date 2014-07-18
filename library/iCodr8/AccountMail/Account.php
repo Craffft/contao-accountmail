@@ -213,7 +213,7 @@ abstract class Account extends \Controller
      */
     protected function sendEmail($strRecipient, $strType, $arrParameters, $strForceLanguage = null)
     {
-        $objEmail = new Email($strType);
+        $objEmail = new Email($strType, $strForceLanguage);
 
         if (is_array($arrParameters)) {
             foreach ($arrParameters as $k => $v) {

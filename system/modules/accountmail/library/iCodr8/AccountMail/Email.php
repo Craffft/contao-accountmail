@@ -122,14 +122,17 @@ class Email
         }
     }
 
-    protected function replaceParameters($strText)
+    protected function replaceParameters($strContent)
     {
         if (is_array($this->arrParameters)) {
             foreach ($this->arrParameters as $key => $varValue) {
-                $strText = str_replace('{{' . $key . '}}', $varValue, $strText);
+                $strContent = str_replace('{{' . $key . '}}', $varValue, $strContent);
             }
         }
 
-        return $strText;
+        $strContent = \String::parseSimpleTokens($strContent, $this->arrParameters);
+        $strContent = \String::restoreBasicEntities($strContent);
+
+        return $strContent;
     }
 }

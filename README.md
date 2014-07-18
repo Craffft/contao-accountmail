@@ -6,6 +6,12 @@ What is accountmail
 Accountmail sends emails to new members and users in contao. If a member or a user gets a new password, an email will also be sent.
 In the backend, the email contents can be changed.
 
+License
+-------
+
+This Contao extension is licensed under the terms of the LGPLv3.
+http://www.gnu.org/licenses/lgpl-3.0.html
+
 Hooks
 -----
 ```php

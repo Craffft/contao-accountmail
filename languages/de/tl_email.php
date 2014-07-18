@@ -31,14 +31,14 @@ $GLOBALS['TL_LANG']['tl_email']['emailFrom'] = array('Absender E-Mail Adresse', 
 $GLOBALS['TL_LANG']['tl_email']['emailFromName'] = array('Absender Name', 'Bitte geben Sie den Name des Absenders ein.');
 $GLOBALS['TL_LANG']['tl_email']['emailSubject'] = array('Betreff', 'Bitte geben Sie den Betreff ein.');
 $GLOBALS['TL_LANG']['tl_email']['emailTemplate'] = array('Template', 'Bitte wählen Sie das E-Mail Template aus.');
-$GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Inhalt', 'Bitte geben Sie den Inhalt ein.');
+$GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Inhalt', 'Bitte geben Sie den Inhalt der E-Mail ein.');
 
 /**
  * Parameters
  */
-$GLOBALS['TL_LANG']['tl_email']['parameters']['name'] = array('{{name}}', 'Wird durch den Name ersetzt.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['firstname'] = array('{{firstname}}', 'Wird durch den Vornamen ersetzt.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['lastname'] = array('{{lastname}}', 'Wird durch den Nachnamen ersetzt.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['email'] = array('{{email}}', 'Wird durch die E-Mail Adresse ersetzt.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['username'] = array('{{username}}', 'Wird durch den Benutzername ersetzt.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['password'] = array('{{password}}', 'Wird durch das Passwort ersetzt.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['name'] = array('{{name}}', 'Nutzen Sie diesen Platzhalter, um den Name in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['firstname'] = array('{{firstname}}', 'Nutzen Sie diesen Platzhalter, um den Vorname in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['lastname'] = array('{{lastname}}', 'Nutzen Sie diesen Platzhalter, um den Nachname in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['email'] = array('{{email}}', 'Nutzen Sie diesen Platzhalter, um die E-Mail Adresse in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['username'] = array('{{username}}', 'Nutzen Sie diesen Platzhalter, um den Benutzername in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['parameters']['password'] = array('{{password}}', 'Nutzen Sie diesen Platzhalter, um das Passwort in die E-Mail einzufügen.');

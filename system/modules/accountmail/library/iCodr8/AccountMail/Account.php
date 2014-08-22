@@ -28,8 +28,13 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function handlePalettes(\DataContainer $dc)
+    public function handlePalettes($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
@@ -42,8 +47,13 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function setAutoPassword(\DataContainer $dc)
+    public function setAutoPassword($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             return;
         }
@@ -77,8 +87,13 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function sendPasswordEmail(\DataContainer $dc)
+    public function sendPasswordEmail($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             return;
         }

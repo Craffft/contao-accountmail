@@ -48,16 +48,23 @@ abstract class Account extends \Controller
             return;
         }
 
-        $strPassword = $this->getPostPassword($dc->id);
+        $intId = $dc->id;
+
+        if (\Input::get('act') == 'overrideAll' && \Input::get('fields') && $dc->id === null) {
+            $session = $this->Session->getData();
+            $intId = isset($session['CURRENT']['IDS'][0]) ? $session['CURRENT']['IDS'][0] : null;
+        }
+
+        $strPassword = $this->getPostPassword($intId);
 
         if ($strPassword !== null && $strPassword == '') {
             $strModel = \Model::getClassFromTable($dc->table);
-            $objAccount = $strModel::findByPk($dc->id);
+            $objAccount = $strModel::findByPk($intId);
 
             if ($objAccount !== null) {
                 $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
 
-                $this->setPostPassword($strNewPassword, $dc->id);
+                $this->setPostPassword($strNewPassword, $intId);
 
                 \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 

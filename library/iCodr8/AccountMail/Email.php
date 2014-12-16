@@ -12,7 +12,7 @@
 
 namespace iCodr8\AccountMail;
 
-class Email
+class Email extends \Controller
 {
     protected $strType;
 
@@ -67,7 +67,7 @@ class Email
         $objEmail->subject = $this->getSubject();
 
         // Prepare html template
-        $objTemplate = new \BackendTemplate($this->getTemplate());
+        $objTemplate = new \BackendTemplate($this->getEmailTemplate());
 
         $objTemplate->title = $this->getSubject();
         $objTemplate->body = $this->getContent();
@@ -97,7 +97,7 @@ class Email
         return true;
     }
 
-    protected function getTemplate()
+    protected function getEmailTemplate()
     {
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Template'])) {
             return $GLOBALS['TL_CONFIG'][$this->strType . 'Template'];
@@ -109,7 +109,10 @@ class Email
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'])) {
             $strSubject = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'], $this->strForceLanguage);
 
-            return $this->replaceParameters($strSubject);
+            $strSubject = $this->replaceParameters($strSubject);
+            $strSubject = $this->replaceInsertTags($strSubject, false);
+
+            return $strSubject;
         }
     }
 
@@ -118,7 +121,10 @@ class Email
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Content'])) {
             $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Content'], $this->strForceLanguage);
 
-            return $this->replaceParameters($strContent);
+            $strContent = $this->replaceParameters($strContent);
+            $strContent = $this->replaceInsertTags($strContent, false);
+
+            return $strContent;
         }
     }
 

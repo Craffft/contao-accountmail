@@ -10,6 +10,8 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
+$this->Import('\\iCodr8\\AccountMail\\Helpwizard', 'Helpwizard');
+
 /**
  * Table tl_email
  */
@@ -53,6 +55,21 @@ $GLOBALS['TL_DCA']['tl_email'] = array
  */
 if (is_array($GLOBALS['TL_EMAIL'])) {
     foreach ($GLOBALS['TL_EMAIL'] as $name => $item) {
+        $arrReferences = array();
+        $arrReferences[] = $GLOBALS['TL_LANG']['tl_email']['helpwizard'];
+
+        switch ($name) {
+            case 'emailNewMember':
+            case 'emailChangedMemberPassword':
+                $arrReferences = array_merge($arrReferences, $this->Helpwizard->getHelpwizardReferencesByMember());
+                break;
+
+            case 'emailNewUser':
+            case 'emailChangedUserPassword':
+                $arrReferences = array_merge($arrReferences, $this->Helpwizard->getHelpwizardReferencesByUser());
+                break;
+        }
+
         $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(';{%s_legend:hide}', $name);
         $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $name, 'Subject');
         $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $name, 'Template');
@@ -63,8 +80,7 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
             'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailSubject'],
             'exclude'                 => true,
             'inputType'               => 'TranslationTextField',
-            'options'                 => $item['parameters'],
-            'reference'               => &$GLOBALS['TL_LANG']['tl_email']['parameters'],
+            'reference'               => $arrReferences,
             'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
         );
 
@@ -83,8 +99,7 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
             'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailContent'],
             'exclude'                 => true,
             'inputType'               => 'TranslationTextArea',
-            'options'                 => $item['parameters'],
-            'reference'               => &$GLOBALS['TL_LANG']['tl_email']['parameters'],
+            'reference'               => $arrReferences,
             'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'rte'=>'tinyFlash', 'tl_class'=>'clr')
         );
     }

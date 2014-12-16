@@ -150,27 +150,25 @@ abstract class Account extends \Controller
      */
     protected function getParameters(\DataContainer $dc)
     {
-        $arrParameters = array();
-        $strType = $this->getType($dc);
-
-        switch ($strType) {
-            case 'emailNewMember':
-            case 'emailChangedMemberPassword':
-                $arrParameters['firstname'] = $dc->activeRecord->firstname;
-                $arrParameters['lastname'] = $dc->activeRecord->lastname;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
-                break;
-
-            case 'emailNewUser':
-            case 'emailChangedUserPassword':
-                $arrParameters['name'] = $dc->activeRecord->name;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
-                break;
+        if (!$dc->activeRecord) {
+            return array();
         }
+
+        $dc->loadDataContainer($dc->table);
+
+        $arrParameters = array();
+        $arrFields = $GLOBALS['TL_DCA'][$dc->table]['fields'];
+
+        if (is_array($arrFields)) {
+            foreach ($arrFields as $strField => $arrField) {
+                if (isset($dc->activeRecord->$strField)) {
+                    $arrParameters[$strField] = $dc->activeRecord->$strField;
+                }
+            }
+        }
+
+        // Replace the password, because it's generated new
+        $arrParameters['password'] = \Input::post('password');
 
         // HOOK: replaceAccountMailParameters
         if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']))

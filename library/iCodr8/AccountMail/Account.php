@@ -151,7 +151,8 @@ abstract class Account extends \Controller
                 break;
 
             default:
-                return;
+                $strType = '';
+                break;
         }
 
         return $strType;
@@ -207,7 +208,7 @@ abstract class Account extends \Controller
 
     /**
      * @param \DataContainer $dc
-     * @return mixed
+     * @return string
      */
     protected function getAccountLanguage(\DataContainer $dc)
     {
@@ -215,13 +216,14 @@ abstract class Account extends \Controller
             return $dc->activeRecord->langauge;
         }
 
-        return;
+        return '';
     }
 
     /**
      * @param $strRecipient
      * @param $strType
      * @param $arrParameters
+     * @param null $strForceLanguage
      * @return bool
      */
     protected function sendEmail($strRecipient, $strType, $arrParameters, $strForceLanguage = null)

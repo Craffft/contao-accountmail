@@ -156,6 +156,8 @@ abstract class Account extends \Controller
 
         $dc->loadDataContainer($dc->table);
 
+        $strType = $this->getType($dc);
+
         $arrParameters = array();
         $arrFields = $GLOBALS['TL_DCA'][$dc->table]['fields'];
 

@@ -23,14 +23,14 @@ abstract class Account extends \Controller
      * @param \DataContainer $dc
      * @return mixed
      */
-    abstract protected function disableAccountMail(\DataContainer $dc);
+    abstract protected function isDisabledAccountMail(\DataContainer $dc);
 
     /**
      * @param \DataContainer $dc
      */
     public function handlePalettes(\DataContainer $dc)
     {
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
                     $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(',sendLoginData', '', $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]);
@@ -44,7 +44,7 @@ abstract class Account extends \Controller
      */
     public function setAutoPassword(\DataContainer $dc)
     {
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             return;
         }
 
@@ -71,7 +71,7 @@ abstract class Account extends \Controller
      */
     public function sendPasswordEmail(\DataContainer $dc)
     {
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             return;
         }
 

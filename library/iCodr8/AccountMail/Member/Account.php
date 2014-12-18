@@ -14,7 +14,7 @@ namespace iCodr8\AccountMail\Member;
 
 class Account extends \iCodr8\AccountMail\Account
 {
-    protected function disableAccountMail(\DataContainer $dc)
+    protected function isDisabledAccountMail(\DataContainer $dc)
     {
         if ($GLOBALS['TL_CONFIG']['disableMemberAccountMail']) {
             return true;

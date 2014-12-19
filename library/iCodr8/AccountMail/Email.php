@@ -14,12 +14,25 @@ namespace iCodr8\AccountMail;
 
 class Email extends \Controller
 {
+    /**
+     * @var
+     */
     protected $strType;
 
+    /**
+     * @var
+     */
     protected $strForceLanguage;
 
+    /**
+     * @var array
+     */
     protected $arrParameters = array();
 
+    /**
+     * @param $strType
+     * @param null $strForceLanguage
+     */
     public function __construct($strType, $strForceLanguage = null)
     {
         if (isset($GLOBALS['TL_EMAIL'][$strType])) {
@@ -33,11 +46,18 @@ class Email extends \Controller
         $this->addParameter('admin_name', \BackendUser::getInstance()->name);
     }
 
+    /**
+     * @param $key
+     * @param $varValue
+     */
     public function addParameter($key, $varValue)
     {
         $this->arrParameters[$key] = $varValue;
     }
 
+    /**
+     * @param $key
+     */
     public function removeParameter($key)
     {
         if (isset($this->arrParameters[$key])) {
@@ -45,6 +65,10 @@ class Email extends \Controller
         }
     }
 
+    /**
+     * @param $strRecipient
+     * @return bool
+     */
     public function sendTo($strRecipient)
     {
         if (!$this->strType) {
@@ -64,12 +88,12 @@ class Email extends \Controller
 
         $objEmail->embedImages = true;
         $objEmail->imageDir = TL_ROOT . '/';
-        $objEmail->subject = $this->getSubject();
+        $objEmail->subject = $this->getContent('subject');
 
         // Prepare html template
         $objTemplate = new \BackendTemplate($this->getEmailTemplate());
 
-        $objTemplate->title = $this->getSubject();
+        $objTemplate->title = $this->getContent('subject');
         $objTemplate->body = $this->getContent();
         $objTemplate->charset = $GLOBALS['TL_CONFIG']['characterSet'];
         $objTemplate->css = '';
@@ -97,6 +121,9 @@ class Email extends \Controller
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getEmailTemplate()
     {
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Template'])) {
@@ -104,30 +131,30 @@ class Email extends \Controller
         }
     }
 
-    protected function getSubject()
+    /**
+     * @param string $strName
+     * @return string
+     */
+    protected function getContent($strName = 'content')
     {
-        if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'])) {
-            $strSubject = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'], $this->strForceLanguage);
+        $strName = ucfirst(strtolower($strName));
 
-            $strSubject = $this->replaceParameters($strSubject);
-            $strSubject = $this->replaceInsertTags($strSubject, false);
+        if (isset($GLOBALS['TL_CONFIG'][$this->strType . $strName])) {
+            $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . $strName], $this->strForceLanguage);
 
-            return $strSubject;
-        }
-    }
-
-    protected function getContent()
-    {
-        if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Content'])) {
-            $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Content'], $this->strForceLanguage);
-
-            $strContent = $this->replaceParameters($strContent);
             $strContent = $this->replaceInsertTags($strContent, false);
+
+            // Only for deprecated {{blabla}} tags
+            $strContent = $this->replaceParameters($strContent);
 
             return $strContent;
         }
     }
 
+    /**
+     * @param $strText
+     * @return string
+     */
     protected function replaceParameters($strText)
     {
         if (is_array($this->arrParameters)) {
@@ -136,6 +163,6 @@ class Email extends \Controller
             }
         }
 
-        return $strText;
+        return (string) $strText;
     }
 }

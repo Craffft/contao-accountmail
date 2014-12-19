@@ -26,6 +26,7 @@ ClassLoader::addClasses(array
     // Library
     'iCodr8\AccountMail\Account'        => 'system/modules/accountmail/library/iCodr8/AccountMail/Account.php',
     'iCodr8\AccountMail\Helpwizard'     => 'system/modules/accountmail/library/iCodr8/AccountMail/Helpwizard.php',
+    'iCodr8\AccountMail\InsertTags'     => 'system/modules/accountmail/library/iCodr8/AccountMail/InsertTags.php',
     'iCodr8\AccountMail\Member\Account' => 'system/modules/accountmail/library/iCodr8/AccountMail/Member/Account.php',
     'iCodr8\AccountMail\User\Account'   => 'system/modules/accountmail/library/iCodr8/AccountMail/User/Account.php',
     'iCodr8\AccountMail\Email'          => 'system/modules/accountmail/library/iCodr8/AccountMail/Email.php',

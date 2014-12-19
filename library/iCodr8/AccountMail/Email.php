@@ -142,7 +142,12 @@ class Email extends \Controller
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . $strName])) {
             $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . $strName], $this->strForceLanguage);
 
+            $objSession = \Session::getInstance();
+            $objSession->set('ACCOUNTMAIL_PARAMETERS', $this->arrParameters);
+
             $strContent = $this->replaceInsertTags($strContent, false);
+
+            $objSession->remove('ACCOUNTMAIL_PARAMETERS');
 
             // Only for deprecated {{blabla}} tags
             $strContent = $this->replaceParameters($strContent);

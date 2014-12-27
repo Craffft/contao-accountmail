@@ -88,15 +88,18 @@ class Email extends \Controller
             $objEmail->fromName = $strEmailFromName;
         }
 
+        $strSubject = $this->getContent('subject');
+        $strContent = $this->getContent();
+
         $objEmail->embedImages = true;
         $objEmail->imageDir = TL_ROOT . '/';
-        $objEmail->subject = $this->getContent('subject');
+        $objEmail->subject = $strSubject;
 
         // Prepare html template
         $objTemplate = new \BackendTemplate($this->getEmailTemplate());
 
-        $objTemplate->title = $this->getContent('subject');
-        $objTemplate->body = $this->getContent();
+        $objTemplate->title = $strSubject;
+        $objTemplate->body = $strContent;
         $objTemplate->charset = $GLOBALS['TL_CONFIG']['characterSet'];
         $objTemplate->css = '';
         $objTemplate->recipient = $strRecipient;

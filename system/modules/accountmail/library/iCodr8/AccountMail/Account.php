@@ -28,8 +28,13 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function handlePalettes(\DataContainer $dc)
+    public function handlePalettes($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
@@ -42,21 +47,34 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function setAutoPassword(\DataContainer $dc)
+    public function setAutoPassword($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             return;
         }
 
-        if (\Input::post('password') !== null && \Input::post('password') == '') {
+        $intId = $dc->id;
+
+        if (\Input::get('act') == 'overrideAll' && \Input::get('fields') && $dc->id === null) {
+            $session = $this->Session->getData();
+            $intId = isset($session['CURRENT']['IDS'][0]) ? $session['CURRENT']['IDS'][0] : null;
+        }
+
+        $strPassword = $this->getPostPassword($intId);
+
+        if ($strPassword !== null && $strPassword == '') {
             $strModel = \Model::getClassFromTable($dc->table);
-            $objAccount = $strModel::findByPk($dc->id);
+            $objAccount = $strModel::findByPk($intId);
 
             if ($objAccount !== null) {
                 $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
 
-                \Input::setPost('password', $strNewPassword);
-                \Input::setPost('password_confirm', $strNewPassword);
+                $this->setPostPassword($strNewPassword, $intId);
 
                 \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
@@ -69,8 +87,13 @@ abstract class Account extends \Controller
     /**
      * @param \DataContainer $dc
      */
-    public function sendPasswordEmail(\DataContainer $dc)
+    public function sendPasswordEmail($dc = null)
     {
+        // Front end call
+        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+            return;
+        }
+
         if ($this->disableAccountMail($dc)) {
             return;
         }
@@ -82,15 +105,15 @@ abstract class Account extends \Controller
 
         // Send login data
         if ($dc->activeRecord->sendLoginData == 1) {
-            if (\Input::post('password') == '' || \Input::post('password') == '*****') {
+            if ($this->getPostPassword($dc->id) == '' || $this->getPostPassword($dc->id) == '*****') {
                 // Set empty password
-                \Input::setPost('password', '');
+                $this->setPostPassword('', $dc->id);
 
                 // Generate new password
                 $this->setAutoPassword($dc);
             }
 
-            if (\Input::post('password') != '' && \Input::post('password') != '*****') {
+            if ($this->getPostPassword($dc->id) != '' && $this->getPostPassword($dc->id) != '*****') {
                 $strType = $this->getType($dc);
                 $arrParameters = $this->getParameters($dc);
                 $strLanguage = $this->getAccountLanguage($dc);
@@ -152,6 +175,7 @@ abstract class Account extends \Controller
     {
         $arrParameters = array();
         $strType = $this->getType($dc);
+        $strPassword = $this->getPostPassword($dc->id);
 
         switch ($strType) {
             case 'emailNewMember':
@@ -160,7 +184,7 @@ abstract class Account extends \Controller
                 $arrParameters['lastname'] = $dc->activeRecord->lastname;
                 $arrParameters['email'] = $dc->activeRecord->email;
                 $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
+                $arrParameters['password'] = $strPassword;
                 break;
 
             case 'emailNewUser':
@@ -168,7 +192,7 @@ abstract class Account extends \Controller
                 $arrParameters['name'] = $dc->activeRecord->name;
                 $arrParameters['email'] = $dc->activeRecord->email;
                 $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = \Input::post('password');
+                $arrParameters['password'] = $strPassword;
                 break;
         }
 
@@ -193,6 +217,30 @@ abstract class Account extends \Controller
     }
 
     /**
+     * @param null $intId
+     * @return mixed
+     */
+    protected function getPostPassword($intId = null)
+    {
+        return (\Input::get('act') == 'editAll' && is_numeric($intId)) ? \Input::post('password_' . $intId) : \Input::post('password');
+    }
+
+    /**
+     * @param $strNewPassword
+     * @param null $intId
+     */
+    protected function setPostPassword($strNewPassword, $intId = null)
+    {
+        if ((\Input::get('act') == 'editAll' && is_numeric($intId))) {
+            \Input::setPost('password_' . $intId, $strNewPassword);
+            \Input::setPost('password_' . $intId . '_confirm', $strNewPassword);
+        } else {
+            \Input::setPost('password', $strNewPassword);
+            \Input::setPost('password_confirm', $strNewPassword);
+        }
+    }
+
+    /**
      * @param \DataContainer $dc
      * @return mixed
      */
@@ -213,7 +261,7 @@ abstract class Account extends \Controller
      */
     protected function sendEmail($strRecipient, $strType, $arrParameters, $strForceLanguage = null)
     {
-        $objEmail = new Email($strType);
+        $objEmail = new Email($strType, $strForceLanguage);
 
         if (is_array($arrParameters)) {
             foreach ($arrParameters as $k => $v) {

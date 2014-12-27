@@ -1,0 +1,39 @@
+{
+    "name": "icodr8/contao-accountmail",
+    "description": "Login data emails for contao accounts.",
+    "keywords": ["email", "account", "member", "user"],
+    "type": "contao-module",
+    "homepage": "http://daniel-kiesel.de",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Daniel Kiesel",
+            "email": "icodr8@gmail.com",
+            "homepage": "http://daniel-kiesel.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/iCodr8/contao-accountmail/issues",
+        "source": "https://github.com/iCodr8/contao-accountmail"
+    },
+    "require": {
+        "php": ">=5.3.2",
+        "contao/core": ">=3.2,<3.3-dev",
+        "icodr8/contao-translation-fields": ">=1.3.3,<1.4-dev",
+        "contao-community-alliance/composer-installer": "*"
+    },
+    "autoload": {
+        "classmap": ["system/"]
+    },
+    "replace": {
+        "contao-legacy/accountmail": "*"
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "system/modules/accountmail": "system/modules/accountmail"
+            }
+        }
+    }
+}

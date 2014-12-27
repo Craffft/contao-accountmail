@@ -257,8 +257,8 @@ abstract class Account extends \Controller
             return '';
         }
 
-        $this->loadLanguageFile('default', $strLanguage);
-        $this->loadLanguageFile($strTable, $strLanguage);
+        $this->loadLanguageFile('default', $strLanguage, true);
+        $this->loadLanguageFile($strTable, $strLanguage, true);
         $this->loadDataContainer($strTable);
 
         if ($GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['inputType'] == 'password') {

@@ -23,19 +23,19 @@ abstract class Account extends \Controller
      * @param \DataContainer $dc
      * @return mixed
      */
-    abstract protected function disableAccountMail(\DataContainer $dc);
+    abstract protected function isDisabledAccountMail(\DataContainer $dc);
 
     /**
-     * @param \DataContainer $dc
+     * @param $dc
      */
-    public function handlePalettes($dc = null)
+    public function handlePalettes($dc)
     {
         // Front end call
-        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+        if (!$dc instanceof \DataContainer) {
             return;
         }
 
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
                     $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(',sendLoginData', '', $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]);
@@ -45,16 +45,17 @@ abstract class Account extends \Controller
     }
 
     /**
-     * @param \DataContainer $dc
+     * @param $dc
+     * @throws \Exception
      */
-    public function setAutoPassword($dc = null)
+    public function setAutoPassword($dc)
     {
         // Front end call
-        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+        if (!$dc instanceof \DataContainer) {
             return;
         }
 
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             return;
         }
 
@@ -85,16 +86,15 @@ abstract class Account extends \Controller
     }
 
     /**
-     * @param \DataContainer $dc
+     * @param $dc
      */
-    public function sendPasswordEmail($dc = null)
+    public function sendPasswordEmail($dc)
     {
-        // Front end call
-        if (!$dc instanceof \DataContainer || TL_MODE != 'BE') {
+        if (!$dc instanceof \DataContainer) {
             return;
         }
 
-        if ($this->disableAccountMail($dc)) {
+        if ($this->isDisabledAccountMail($dc)) {
             return;
         }
 
@@ -161,7 +161,8 @@ abstract class Account extends \Controller
                 break;
 
             default:
-                return;
+                $strType = '';
+                break;
         }
 
         return $strType;
@@ -173,41 +174,39 @@ abstract class Account extends \Controller
      */
     protected function getParameters(\DataContainer $dc)
     {
-        $arrParameters = array();
-        $strType = $this->getType($dc);
-        $strPassword = $this->getPostPassword($dc->id);
-
-        switch ($strType) {
-            case 'emailNewMember':
-            case 'emailChangedMemberPassword':
-                $arrParameters['firstname'] = $dc->activeRecord->firstname;
-                $arrParameters['lastname'] = $dc->activeRecord->lastname;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = $strPassword;
-                break;
-
-            case 'emailNewUser':
-            case 'emailChangedUserPassword':
-                $arrParameters['name'] = $dc->activeRecord->name;
-                $arrParameters['email'] = $dc->activeRecord->email;
-                $arrParameters['username'] = $dc->activeRecord->username;
-                $arrParameters['password'] = $strPassword;
-                break;
+        if (!$dc->activeRecord) {
+            return array();
         }
 
+        $dc->loadDataContainer($dc->table);
+
+        $strType = $this->getType($dc);
+
+        $arrParameters = array();
+        $arrFields = $GLOBALS['TL_DCA'][$dc->table]['fields'];
+
+        if (is_array($arrFields)) {
+            foreach ($arrFields as $strField => $arrField) {
+                if (isset($dc->activeRecord->$strField)) {
+                    $arrParameters[$strField] = $this->renderParameterValue(
+                        $dc->table,
+                        (isset($dc->activeRecord->language) ? $dc->activeRecord->language : ''),
+                        $strField,
+                        $dc->activeRecord->$strField);
+                }
+            }
+        }
+
+        // Replace the password, because it's generated new
+        $arrParameters['password'] = \Input::post('password');
+
         // HOOK: replaceAccountMailParameters
-        if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'] as $callback)
-            {
-                if (is_array($callback))
-                {
+        if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'])) {
+            foreach ($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'] as $callback) {
+                if (is_array($callback)) {
                     $this->import($callback[0]);
                     $arrParameters = $this->$callback[0]->$callback[1]($strType, $arrParameters, $dc);
-                }
-                elseif (is_callable($callback))
-                {
+                } elseif (is_callable($callback)) {
                     $arrParameters = $callback($strType, $arrParameters, $dc);
                 }
             }
@@ -241,8 +240,53 @@ abstract class Account extends \Controller
     }
 
     /**
+     * @param $strTable
+     * @param $strLanguage
+     * @param $strName
+     * @param $varValue
+     * @return string
+     */
+    protected function renderParameterValue($strTable, $strLanguage, $strName, $varValue)
+    {
+        if ($varValue == '') {
+            return '';
+        }
+
+        $this->loadLanguageFile('default', $strLanguage);
+        $this->loadLanguageFile($strTable, $strLanguage);
+        $this->loadDataContainer($strTable);
+
+        if ($GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['inputType'] == 'password') {
+            return '';
+        }
+
+        $varValue = deserialize($varValue);
+        $rgxp = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['eval']['rgxp'];
+        $opts = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['options'];
+        $rfrc = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['reference'];
+
+        if ($rgxp == 'date') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $varValue);
+        } elseif ($rgxp == 'time') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['timeFormat'], $varValue);
+        } elseif ($rgxp == 'datim') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $varValue);
+        } elseif (is_array($varValue)) {
+            $varValue = implode(', ', $varValue);
+        } elseif (is_array($opts) && array_is_assoc($opts)) {
+            $varValue = isset($opts[$varValue]) ? $opts[$varValue] : $varValue;
+        } elseif (is_array($rfrc)) {
+            $varValue = isset($rfrc[$varValue]) ? ((is_array($rfrc[$varValue])) ? $rfrc[$varValue][0] : $rfrc[$varValue]) : $varValue;
+        }
+
+        $varValue = specialchars($varValue);
+
+        return (string) $varValue;
+    }
+
+    /**
      * @param \DataContainer $dc
-     * @return mixed
+     * @return string
      */
     protected function getAccountLanguage(\DataContainer $dc)
     {
@@ -250,13 +294,14 @@ abstract class Account extends \Controller
             return $dc->activeRecord->langauge;
         }
 
-        return;
+        return '';
     }
 
     /**
      * @param $strRecipient
      * @param $strType
      * @param $arrParameters
+     * @param null $strForceLanguage
      * @return bool
      */
     protected function sendEmail($strRecipient, $strType, $arrParameters, $strForceLanguage = null)

@@ -34,11 +34,6 @@ $GLOBALS['TL_LANG']['tl_email']['emailTemplate'] = array('Template', 'Bitte wäh
 $GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Inhalt', 'Bitte geben Sie den Inhalt der E-Mail ein.');
 
 /**
- * Parameters
+ * Helpwizard
  */
-$GLOBALS['TL_LANG']['tl_email']['parameters']['name'] = array('{{name}}', 'Nutzen Sie diesen Platzhalter, um den Name in die E-Mail einzufügen.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['firstname'] = array('{{firstname}}', 'Nutzen Sie diesen Platzhalter, um den Vorname in die E-Mail einzufügen.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['lastname'] = array('{{lastname}}', 'Nutzen Sie diesen Platzhalter, um den Nachname in die E-Mail einzufügen.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['email'] = array('{{email}}', 'Nutzen Sie diesen Platzhalter, um die E-Mail Adresse in die E-Mail einzufügen.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['username'] = array('{{username}}', 'Nutzen Sie diesen Platzhalter, um den Benutzername in die E-Mail einzufügen.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['password'] = array('{{password}}', 'Nutzen Sie diesen Platzhalter, um das Passwort in die E-Mail einzufügen.');
+$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('Allgemeine Beschreibung', 'Sie können in diesem Feld die Contao Insert-Tags und die, der Erweiterung "Inserttags" verwenden. Unter anderem können Sie auch die folgenden Platzhalter nutzen.');

@@ -22,6 +22,13 @@ if (is_array($GLOBALS['TL_DCA']['tl_member']['palettes'])) {
     }
 }
 
+// Subpalettes
+if (is_array($GLOBALS['TL_DCA']['tl_member']['subpalettes'])) {
+    foreach ($GLOBALS['TL_DCA']['tl_member']['subpalettes'] as $k => $v) {
+        $GLOBALS['TL_DCA']['tl_member']['subpalettes'][$k] = preg_replace('#([,;]+)password([,;]?)#', '$1password,sendLoginData$2', $v);
+    }
+}
+
 // Fields
 $GLOBALS['TL_DCA']['tl_member']['fields']['sendLoginData'] = array
 (

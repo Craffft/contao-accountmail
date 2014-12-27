@@ -165,7 +165,7 @@ class Email extends \Controller
     {
         if (is_array($this->arrParameters)) {
             foreach ($this->arrParameters as $key => $varValue) {
-                $strContent = str_replace('{{' . $key . '}}', $varValue, $strText);
+                $strText = str_replace('{{' . $key . '}}', $varValue, $strText);
             }
         }
 

@@ -159,6 +159,7 @@ class Email extends \Controller
     /**
      * @param $strText
      * @return string
+     * @deprecated
      */
     protected function replaceParameters($strText)
     {

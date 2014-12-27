@@ -18,34 +18,32 @@ $this->Import('\\iCodr8\\AccountMail\\Helpwizard', 'Helpwizard');
 $GLOBALS['TL_DCA']['tl_email'] = array
 (
     // Config
-    'config' => array
+    'config'   => array
     (
-        'dataContainer'               => 'File'
+        'dataContainer' => 'File'
     ),
-
     // Palettes
     'palettes' => array
     (
-        'default'                     => '{emailSender_legend},emailFrom,emailFromName'
+        'default' => '{emailSender_legend},emailFrom,emailFromName'
     ),
-
     // Fields
-    'fields' => array
+    'fields'   => array
     (
         // Email sender
-        'emailFrom' => array
+        'emailFrom'     => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailFrom'],
-            'exclude'                 => true,
-            'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'tl_class'=>'w50')
+            'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailFrom'],
+            'exclude'   => true,
+            'inputType' => 'text',
+            'eval'      => array('mandatory' => true, 'rgxp' => 'email', 'tl_class' => 'w50')
         ),
         'emailFromName' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailFromName'],
-            'exclude'                 => true,
-            'inputType'               => 'TranslationTextField',
-            'eval'                    => array('mandatory'=>true, 'rgxp'=>'alpha', 'tl_class'=>'w50')
+            'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailFromName'],
+            'exclude'   => true,
+            'inputType' => 'TranslationTextField',
+            'eval'      => array('mandatory' => true, 'rgxp' => 'alpha', 'tl_class' => 'w50')
         )
     )
 );
@@ -77,30 +75,30 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
 
         $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Subject'] = array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailSubject'],
-            'exclude'                 => true,
-            'inputType'               => 'TranslationTextField',
-            'reference'               => $arrReferences,
-            'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
+            'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailSubject'],
+            'exclude'   => true,
+            'inputType' => 'TranslationTextField',
+            'reference' => $arrReferences,
+            'eval'      => array('mandatory' => true, 'helpwizard' => true, 'tl_class' => 'w50')
         );
 
         $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Template'] = array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailTemplate'],
-            'default'                 => 'mail_default',
-            'exclude'                 => true,
-            'inputType'               => 'select',
-            'options_callback'        => array('tl_email', 'getMailTemplates'),
-            'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50')
+            'label'            => &$GLOBALS['TL_LANG']['tl_email']['emailTemplate'],
+            'default'          => 'mail_default',
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => array('tl_email', 'getMailTemplates'),
+            'eval'             => array('mandatory' => true, 'tl_class' => 'w50')
         );
 
         $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Content'] = array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_email']['emailContent'],
-            'exclude'                 => true,
-            'inputType'               => 'TranslationTextArea',
-            'reference'               => $arrReferences,
-            'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'rte'=>'tinyFlash', 'tl_class'=>'clr')
+            'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailContent'],
+            'exclude'   => true,
+            'inputType' => 'TranslationTextArea',
+            'reference' => $arrReferences,
+            'eval'      => array('mandatory' => true, 'helpwizard' => true, 'rte' => 'tinyFlash', 'tl_class' => 'clr')
         );
     }
 }

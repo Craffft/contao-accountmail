@@ -78,11 +78,13 @@ class Email extends \Controller
         $objEmail = new \Email();
 
         $objEmail->from = $GLOBALS['TL_CONFIG']['emailFrom'];
-        $strEmailFromName = \TranslationFields::translateValue($GLOBALS['TL_CONFIG']['emailFromName'], $this->strForceLanguage);
+        $strEmailFromName = \TranslationFields::translateValue(
+            $GLOBALS['TL_CONFIG']['emailFromName'],
+            $this->strForceLanguage
+        );
 
         // Add sender name
-        if ($strEmailFromName != '')
-        {
+        if ($strEmailFromName != '') {
             $objEmail->fromName = $strEmailFromName;
         }
 
@@ -103,18 +105,14 @@ class Email extends \Controller
         $objEmail->html = $objTemplate->parse();
 
         // Send email
-        try
-        {
+        try {
             $objEmail->sendTo($strRecipient);
-        }
-        catch (\Swift_RfcComplianceException $e)
-        {
+        } catch (\Swift_RfcComplianceException $e) {
             return false;
         }
 
         // Rejected recipients
-        if ($objEmail->hasFailures())
-        {
+        if ($objEmail->hasFailures()) {
             return false;
         }
 
@@ -140,7 +138,10 @@ class Email extends \Controller
         $strName = ucfirst(strtolower($strName));
 
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . $strName])) {
-            $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . $strName], $this->strForceLanguage);
+            $strContent = \TranslationFields::translateValue(
+                $GLOBALS['TL_CONFIG'][$this->strType . $strName],
+                $this->strForceLanguage
+            );
 
             $objSession = \Session::getInstance();
             $objSession->set('ACCOUNTMAIL_PARAMETERS', $this->arrParameters);
@@ -149,7 +150,7 @@ class Email extends \Controller
 
             $objSession->remove('ACCOUNTMAIL_PARAMETERS');
 
-            // Only for deprecated {{blabla}} tags
+            // Only for deprecated {{blabla}} tags, will be removed in v1.3
             $strContent = $this->replaceParameters($strContent);
 
             return $strContent;
@@ -172,6 +173,6 @@ class Email extends \Controller
         $strText = \String::parseSimpleTokens($strText, $this->arrParameters);
         $strText = \String::restoreBasicEntities($strText);
 
-        return (string) $strText;
+        return (string)$strText;
     }
 }

@@ -38,7 +38,11 @@ abstract class Account extends \Controller
         if ($this->isDisabledAccountMail($dc)) {
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
-                    $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(',sendLoginData', '', $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]);
+                    $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(
+                        ',sendLoginData',
+                        '',
+                        $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]
+                    );
                 }
             }
         }
@@ -90,6 +94,7 @@ abstract class Account extends \Controller
      */
     public function sendPasswordEmail($dc)
     {
+        // Front end call
         if (!$dc instanceof \DataContainer) {
             return;
         }
@@ -281,7 +286,7 @@ abstract class Account extends \Controller
 
         $varValue = specialchars($varValue);
 
-        return (string) $varValue;
+        return (string)$varValue;
     }
 
     /**

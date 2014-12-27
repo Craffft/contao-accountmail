@@ -145,6 +145,30 @@ abstract class Account extends \Controller
     }
 
     /**
+     * @param null $intId
+     * @return mixed
+     */
+    protected function getPostPassword($intId = null)
+    {
+        return (\Input::get('act') == 'editAll' && is_numeric($intId)) ? \Input::post('password_' . $intId) : \Input::post('password');
+    }
+
+    /**
+     * @param $strNewPassword
+     * @param null $intId
+     */
+    protected function setPostPassword($strNewPassword, $intId = null)
+    {
+        if ((\Input::get('act') == 'editAll' && is_numeric($intId))) {
+            \Input::setPost('password_' . $intId, $strNewPassword);
+            \Input::setPost('password_' . $intId . '_confirm', $strNewPassword);
+        } else {
+            \Input::setPost('password', $strNewPassword);
+            \Input::setPost('password_confirm', $strNewPassword);
+        }
+    }
+
+    /**
      * @param \DataContainer $dc
      * @return string
      */
@@ -218,30 +242,6 @@ abstract class Account extends \Controller
         }
 
         return $arrParameters;
-    }
-
-    /**
-     * @param null $intId
-     * @return mixed
-     */
-    protected function getPostPassword($intId = null)
-    {
-        return (\Input::get('act') == 'editAll' && is_numeric($intId)) ? \Input::post('password_' . $intId) : \Input::post('password');
-    }
-
-    /**
-     * @param $strNewPassword
-     * @param null $intId
-     */
-    protected function setPostPassword($strNewPassword, $intId = null)
-    {
-        if ((\Input::get('act') == 'editAll' && is_numeric($intId))) {
-            \Input::setPost('password_' . $intId, $strNewPassword);
-            \Input::setPost('password_' . $intId . '_confirm', $strNewPassword);
-        } else {
-            \Input::setPost('password', $strNewPassword);
-            \Input::setPost('password_confirm', $strNewPassword);
-        }
     }
 
     /**

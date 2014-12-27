@@ -27,16 +27,22 @@ $GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'][] = array(
 // Palettes
 if (is_array($GLOBALS['TL_DCA']['tl_member']['palettes'])) {
     foreach ($GLOBALS['TL_DCA']['tl_member']['palettes'] as $k => $v) {
-        $GLOBALS['TL_DCA']['tl_member']['palettes'][$k] = preg_replace('#([,;]+)password([,;]?)#',
-            '$1password,sendLoginData$2', $v);
+        $GLOBALS['TL_DCA']['tl_member']['palettes'][$k] = preg_replace(
+            '#([,;]+)password([,;]?)#',
+            '$1password,sendLoginData$2',
+            $v
+        );
     }
 }
 
 // Subpalettes
 if (is_array($GLOBALS['TL_DCA']['tl_member']['subpalettes'])) {
     foreach ($GLOBALS['TL_DCA']['tl_member']['subpalettes'] as $k => $v) {
-        $GLOBALS['TL_DCA']['tl_member']['subpalettes'][$k] = preg_replace('#([,;]+)password([,;]?)#',
-            '$1password,sendLoginData$2', $v);
+        $GLOBALS['TL_DCA']['tl_member']['subpalettes'][$k] = preg_replace(
+            '#([,;]+)password([,;]?)#',
+            '$1password,sendLoginData$2',
+            $v
+        );
     }
 }
 

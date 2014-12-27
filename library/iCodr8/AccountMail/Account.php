@@ -178,7 +178,11 @@ abstract class Account extends \Controller
         if (is_array($arrFields)) {
             foreach ($arrFields as $strField => $arrField) {
                 if (isset($dc->activeRecord->$strField)) {
-                    $arrParameters[$strField] = $dc->activeRecord->$strField;
+                    $arrParameters[$strField] = $this->renderParameterValue(
+                        $dc->table,
+                        (isset($dc->activeRecord->language) ? $dc->activeRecord->language : ''),
+                        $strField,
+                        $dc->activeRecord->$strField);
                 }
             }
         }
@@ -204,6 +208,50 @@ abstract class Account extends \Controller
         }
 
         return $arrParameters;
+    }
+
+    /**
+     * @param $strTable
+     * @param $strLanguage
+     * @param $strName
+     * @param $varValue
+     * @return string
+     */
+    protected function renderParameterValue($strTable, $strLanguage, $strName, $varValue)
+    {
+        if ($varValue == '') {
+            return '';
+        }
+
+        $this->loadDataContainer($strTable);
+        $this->loadLanguageFile($strTable, $strLanguage);
+
+        if ($GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['inputType'] == 'password') {
+            return '';
+        }
+
+        $varValue = deserialize($varValue);
+        $rgxp = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['eval']['rgxp'];
+        $opts = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['options'];
+        $rfrc = $GLOBALS['TL_DCA'][$strTable]['fields'][$strName]['reference'];
+
+        if ($rgxp == 'date') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $varValue);
+        } elseif ($rgxp == 'time') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['timeFormat'], $varValue);
+        } elseif ($rgxp == 'datim') {
+            $varValue = \Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $varValue);
+        } elseif (is_array($varValue)) {
+            $varValue = implode(', ', $varValue);
+        } elseif (is_array($opts) && array_is_assoc($opts)) {
+            $varValue = isset($opts[$varValue]) ? $opts[$varValue] : $varValue;
+        } elseif (is_array($rfrc)) {
+            $varValue = isset($rfrc[$varValue]) ? ((is_array($rfrc[$varValue])) ? $rfrc[$varValue][0] : $rfrc[$varValue]) : $varValue;
+        }
+
+        $varValue = specialchars($varValue);
+
+        return (string) $varValue;
     }
 
     /**

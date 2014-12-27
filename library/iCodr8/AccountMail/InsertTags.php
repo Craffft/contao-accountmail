@@ -16,14 +16,14 @@ class InsertTags
 {
     public function replaceInsertTags($strTag)
     {
-        $arrElements = explode('::', $strTag);
+        list($strName, $strValue) = explode('::', $strTag);
 
-        if ($arrElements[0] == 'accountmail') {
+        if ($strName == 'accountmail') {
             $objSession = \Session::getInstance();
             $arrData = $objSession->get('ACCOUNTMAIL_PARAMETERS');
 
-            if (isset($arrData[$arrElements[1]])) {
-                return $arrData[$arrElements[1]];
+            if (isset($arrData[$strValue])) {
+                return $arrData[$strValue];
             }
         }
 

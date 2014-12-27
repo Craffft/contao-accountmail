@@ -191,17 +191,12 @@ abstract class Account extends \Controller
         $arrParameters['password'] = \Input::post('password');
 
         // HOOK: replaceAccountMailParameters
-        if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'] as $callback)
-            {
-                if (is_array($callback))
-                {
+        if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'])) {
+            foreach ($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'] as $callback) {
+                if (is_array($callback)) {
                     $this->import($callback[0]);
                     $arrParameters = $this->$callback[0]->$callback[1]($strType, $arrParameters, $dc);
-                }
-                elseif (is_callable($callback))
-                {
+                } elseif (is_callable($callback)) {
                     $arrParameters = $callback($strType, $arrParameters, $dc);
                 }
             }

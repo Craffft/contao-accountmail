@@ -50,7 +50,7 @@ class Helpwizard extends \Controller
                 }
 
                 $arrReferences[] = array(
-                    sprintf('{{%s::%s}}', 'accountmail', $strField),
+                    sprintf('{{%s::%s|%s}}', 'accountmail', $strField, 'refresh'),
                     sprintf($GLOBALS['TL_LANG']['MSC']['helpwizard_insert_tag'], $strLabel)
                 );
             }

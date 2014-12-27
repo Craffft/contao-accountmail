@@ -16,7 +16,9 @@ class InsertTags
 {
     public function replaceInsertTags($strTag)
     {
-        list($strName, $strValue) = explode('::', $strTag);
+        $flags = explode('|', $strTag);
+        $tag = array_shift($flags);
+        list($strName, $strValue) = explode('::', $tag);
 
         if ($strName == 'accountmail') {
             $objSession = \Session::getInstance();

@@ -36,4 +36,4 @@ $GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Inhalt', 'Bitte geben S
 /**
  * Helpwizard
  */
-$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('Allgemeine Beschreibung', 'Sie können in diesem Feld die Contao Insert-Tags und die, der Erweiterung "Inserttags" verwenden. Unter anderem können Sie auch die folgenden Platzhalter nutzen.');
+$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('Allgemeine Beschreibung', 'Sie können in diesem Feld die Contao Insert-Tags und die, der Erweiterung "Inserttags" verwenden.<br><strong>WICHTIG: Jeder Insert-Tag muss das Flag "|refresh" haben</strong>, denn sonst kann es zu fehlerhaften E-Mails kommen.<br>Unter anderem können Sie auch die folgenden Platzhalter nutzen:');

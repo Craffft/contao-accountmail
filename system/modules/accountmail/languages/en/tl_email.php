@@ -36,4 +36,4 @@ $GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Email content', 'Please
 /**
  * Helpwizard
  */
-$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('General description', 'You can use in this field the Contao insert tags and the extension "insert tags". Among other things, you can also use the following wildcards.');
+$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('General description', 'You can use in this field the Contao insert tags and the extension "insert tags".<br><strong>IMPORTANT: Each insert-tag must have the flag "| refresh"</strong>, because otherwise it could lead to erroneous emails.<br>Among other things, you can also use the following wildcards:');

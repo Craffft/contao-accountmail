@@ -70,11 +70,15 @@ abstract class Account extends \Controller
             if (!isset($GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'])) {
                 $strPassword = $this->getPostPassword();
                 $GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'] = ($strPassword == '' || $strPassword == '*****') ? true : false;
-            }
 
-            $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
-            $this->setPostPassword($strNewPassword);
-            \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+                if ($GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'] === true) {
+                    // Set password, that no error occurs with "password not set"
+                    $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
+                    $this->setPostPassword($strNewPassword);
+                }
+
+                \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+            }
 
             return;
         }

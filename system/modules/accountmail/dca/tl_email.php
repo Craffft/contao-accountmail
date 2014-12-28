@@ -52,11 +52,11 @@ $GLOBALS['TL_DCA']['tl_email'] = array
  * Add email fields dynamically
  */
 if (is_array($GLOBALS['TL_EMAIL'])) {
-    foreach ($GLOBALS['TL_EMAIL'] as $name => $item) {
+    foreach ($GLOBALS['TL_EMAIL'] as $strName) {
         $arrReferences = array();
         $arrReferences[] = $GLOBALS['TL_LANG']['tl_email']['helpwizard'];
 
-        switch ($name) {
+        switch ($strName) {
             case 'emailNewMember':
             case 'emailChangedMemberPassword':
                 $arrReferences = array_merge($arrReferences, $this->Helpwizard->getHelpwizardReferencesByMember());
@@ -68,12 +68,12 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
                 break;
         }
 
-        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(';{%s_legend:hide}', $name);
-        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $name, 'Subject');
-        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $name, 'Template');
-        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $name, 'Content');
+        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(';{%s_legend:hide}', $strName);
+        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $strName, 'Subject');
+        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $strName, 'Template');
+        $GLOBALS['TL_DCA']['tl_email']['palettes']['default'] .= sprintf(',%s%s', $strName, 'Content');
 
-        $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Subject'] = array
+        $GLOBALS['TL_DCA']['tl_email']['fields'][$strName . 'Subject'] = array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailSubject'],
             'exclude'   => true,
@@ -82,7 +82,7 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
             'eval'      => array('mandatory' => true, 'helpwizard' => true, 'tl_class' => 'w50')
         );
 
-        $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Template'] = array
+        $GLOBALS['TL_DCA']['tl_email']['fields'][$strName . 'Template'] = array
         (
             'label'            => &$GLOBALS['TL_LANG']['tl_email']['emailTemplate'],
             'default'          => 'mail_default',
@@ -92,7 +92,7 @@ if (is_array($GLOBALS['TL_EMAIL'])) {
             'eval'             => array('mandatory' => true, 'tl_class' => 'w50')
         );
 
-        $GLOBALS['TL_DCA']['tl_email']['fields'][$name . 'Content'] = array
+        $GLOBALS['TL_DCA']['tl_email']['fields'][$strName . 'Content'] = array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_email']['emailContent'],
             'exclude'   => true,

@@ -35,7 +35,7 @@ class Email extends \Controller
      */
     public function __construct($strType, $strForceLanguage = null)
     {
-        if (isset($GLOBALS['TL_EMAIL'][$strType])) {
+        if (in_array($strType, $GLOBALS['TL_EMAIL'])) {
             $this->strType = $strType;
         }
 

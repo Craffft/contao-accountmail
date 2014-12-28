@@ -15,22 +15,10 @@
  */
 $GLOBALS['TL_EMAIL'] = array
 (
-    'emailNewMember'             => array
-    (
-        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
-    ),
-    'emailChangedMemberPassword' => array
-    (
-        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
-    ),
-    'emailNewUser'               => array
-    (
-        'parameters' => array('name', 'email', 'username', 'password')
-    ),
-    'emailChangedUserPassword'   => array
-    (
-        'parameters' => array('name', 'email', 'username', 'password')
-    )
+    'emailNewMember',
+    'emailChangedMemberPassword',
+    'emailNewUser',
+    'emailChangedUserPassword'
 );
 
 /**

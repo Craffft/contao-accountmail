@@ -65,9 +65,18 @@ abstract class Account extends \Controller
 
         $intId = $dc->id;
 
-        if (\Input::get('act') == 'overrideAll' && \Input::get('fields') && $dc->id === null) {
-            $session = $this->Session->getData();
-            $intId = isset($session['CURRENT']['IDS'][0]) ? $session['CURRENT']['IDS'][0] : null;
+        if (\Input::get('act') == 'overrideAll' && \Input::get('fields') && $intId === null) {
+            // Define indicator for given or not given password on overrideAll mode
+            if (!isset($GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'])) {
+                $strPassword = $this->getPostPassword();
+                $GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'] = ($strPassword == '' || $strPassword == '*****') ? true : false;
+            }
+
+            $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
+            $this->setPostPassword($strNewPassword);
+            \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+
+            return;
         }
 
         $strPassword = $this->getPostPassword($intId);
@@ -78,9 +87,7 @@ abstract class Account extends \Controller
 
             if ($objAccount !== null) {
                 $strNewPassword = substr(str_shuffle('abcdefghkmnpqrstuvwxyzABCDEFGHKMNOPQRSTUVWXYZ0123456789'), 0, 8);
-
                 $this->setPostPassword($strNewPassword, $intId);
-
                 \Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
                 $objAccount->password = \Encryption::hash($strNewPassword);
@@ -110,6 +117,11 @@ abstract class Account extends \Controller
 
         // Send login data
         if ($dc->activeRecord->sendLoginData == 1) {
+            // Set different passwords on overrideAll mode, when no password was given
+            if (\Input::get('act') == 'overrideAll' && $GLOBALS['ACCOUNTMAIL']['AUTO_PASSWORD'] === true) {
+                $this->setPostPassword('', $dc->id);
+            }
+
             if ($this->getPostPassword($dc->id) == '' || $this->getPostPassword($dc->id) == '*****') {
                 // Set empty password
                 $this->setPostPassword('', $dc->id);
@@ -227,7 +239,7 @@ abstract class Account extends \Controller
         }
 
         // Replace the password, because it's generated new
-        $arrParameters['password'] = \Input::post('password');
+        $arrParameters['password'] = $this->getPostPassword($dc->id);
 
         // HOOK: replaceAccountMailParameters
         if (isset($GLOBALS['TL_HOOKS']['replaceAccountMailParameters']) && is_array($GLOBALS['TL_HOOKS']['replaceAccountMailParameters'])) {

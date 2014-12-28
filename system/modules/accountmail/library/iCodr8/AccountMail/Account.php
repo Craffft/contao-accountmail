@@ -231,7 +231,7 @@ abstract class Account extends \Controller
                 if (isset($dc->activeRecord->$strField)) {
                     $arrParameters[$strField] = $this->renderParameterValue(
                         $dc->table,
-                        (isset($dc->activeRecord->language) ? $dc->activeRecord->language : ''),
+                        $this->getAccountLanguage($dc),
                         $strField,
                         $dc->activeRecord->$strField);
                 }
@@ -307,8 +307,8 @@ abstract class Account extends \Controller
      */
     protected function getAccountLanguage(\DataContainer $dc)
     {
-        if ($dc->activeRecord->langauge) {
-            return $dc->activeRecord->langauge;
+        if ($dc->activeRecord->language) {
+            return $dc->activeRecord->language;
         }
 
         return '';

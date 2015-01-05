@@ -26,9 +26,9 @@ abstract class Account extends \Controller
     abstract protected function isDisabledAccountMail(\DataContainer $dc);
 
     /**
-     * @param $dc
+     * @param null $dc
      */
-    public function handlePalettes($dc)
+    public function handlePalettes($dc = null)
     {
         // Front end call
         if (!$dc instanceof \DataContainer) {
@@ -49,10 +49,10 @@ abstract class Account extends \Controller
     }
 
     /**
-     * @param $dc
+     * @param null $dc
      * @throws \Exception
      */
-    public function setAutoPassword($dc)
+    public function setAutoPassword($dc = null)
     {
         // Front end call
         if (!$dc instanceof \DataContainer) {
@@ -101,9 +101,9 @@ abstract class Account extends \Controller
     }
 
     /**
-     * @param $dc
+     * @param null $dc
      */
-    public function sendPasswordEmail($dc)
+    public function sendPasswordEmail($dc = null)
     {
         // Front end call
         if (!$dc instanceof \DataContainer) {

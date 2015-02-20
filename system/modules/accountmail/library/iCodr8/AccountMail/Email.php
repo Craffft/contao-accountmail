@@ -10,7 +10,7 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-namespace iCodr8\AccountMail;
+namespace Craffft\AccountMail;
 
 class Email
 {

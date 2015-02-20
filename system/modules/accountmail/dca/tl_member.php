@@ -11,9 +11,9 @@
  */
 
 // Config
-$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'handlePalettes');
-$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'setAutoPassword');
-$GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'][] = array('iCodr8\\AccountMail\\Member\\Account', 'sendPasswordEmail');
+$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('Craffft\\AccountMail\\Member\\Account', 'handlePalettes');
+$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('Craffft\\AccountMail\\Member\\Account', 'setAutoPassword');
+$GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'][] = array('Craffft\\AccountMail\\Member\\Account', 'sendPasswordEmail');
 
 // Palettes
 if (is_array($GLOBALS['TL_DCA']['tl_member']['palettes'])) {

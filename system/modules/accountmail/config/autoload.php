@@ -15,7 +15,7 @@
  */
 ClassLoader::addNamespaces(array
 (
-    'iCodr8',
+    'Craffft',
 ));
 
 /**
@@ -24,8 +24,8 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
     // Library
-    'iCodr8\AccountMail\Account'        => 'system/modules/accountmail/library/iCodr8/AccountMail/Account.php',
-    'iCodr8\AccountMail\Member\Account' => 'system/modules/accountmail/library/iCodr8/AccountMail/Member/Account.php',
-    'iCodr8\AccountMail\User\Account'   => 'system/modules/accountmail/library/iCodr8/AccountMail/User/Account.php',
-    'iCodr8\AccountMail\Email'          => 'system/modules/accountmail/library/iCodr8/AccountMail/Email.php',
+    'Craffft\AccountMail\Account'        => 'system/modules/accountmail/library/Craffft/AccountMail/Account.php',
+    'Craffft\AccountMail\Member\Account' => 'system/modules/accountmail/library/Craffft/AccountMail/Member/Account.php',
+    'Craffft\AccountMail\User\Account'   => 'system/modules/accountmail/library/Craffft/AccountMail/User/Account.php',
+    'Craffft\AccountMail\Email'          => 'system/modules/accountmail/library/Craffft/AccountMail/Email.php',
 ));

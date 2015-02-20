@@ -10,9 +10,9 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-namespace iCodr8\AccountMail\User;
+namespace Craffft\AccountMail\User;
 
-class Account extends \iCodr8\AccountMail\Account
+class Account extends \Craffft\AccountMail\Account
 {
     protected function disableAccountMail(\DataContainer $dc)
     {

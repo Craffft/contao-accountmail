@@ -12,19 +12,23 @@
 
 // Palettes
 $strPalette = '{accountmail_legend},disableMemberAccountMail,disableUserAccountMail';
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] = preg_replace('#([;]?)$#', ';' . $strPalette, $GLOBALS['TL_DCA']['tl_settings']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] = preg_replace(
+    '#([;]?)$#',
+    ';' . $strPalette,
+    $GLOBALS['TL_DCA']['tl_settings']['palettes']['default']
+);
 
 // Fields
 $GLOBALS['TL_DCA']['tl_settings']['fields']['disableMemberAccountMail'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['disableMemberAccountMail'],
-    'inputType'               => 'checkbox',
-    'eval'                    => array('tl_class'=>'w50')
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['disableMemberAccountMail'],
+    'inputType' => 'checkbox',
+    'eval'      => array('tl_class' => 'w50')
 );
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['disableUserAccountMail'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['disableUserAccountMail'],
-    'inputType'               => 'checkbox',
-    'eval'                    => array('tl_class'=>'w50')
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['disableUserAccountMail'],
+    'inputType' => 'checkbox',
+    'eval'      => array('tl_class' => 'w50')
 );

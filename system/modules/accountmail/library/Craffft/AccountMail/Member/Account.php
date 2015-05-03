@@ -14,7 +14,7 @@ namespace Craffft\AccountMail\Member;
 
 class Account extends \Craffft\AccountMail\Account
 {
-    protected function disableAccountMail(\DataContainer $dc)
+    protected function isDisabledAccountMail(\DataContainer $dc)
     {
         if ($GLOBALS['TL_CONFIG']['disableMemberAccountMail']) {
             return true;

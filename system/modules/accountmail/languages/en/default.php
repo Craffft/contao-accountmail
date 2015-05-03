@@ -13,5 +13,6 @@
 /**
  * Miscellaneous
  */
+$GLOBALS['TL_LANG']['MSC']['helpwizard_insert_tag'] = 'Is the "%s" field instead of insert tags.';
 $GLOBALS['TL_LANG']['MSC']['login_data_send'] = 'The new login details have been sent via email.';
 $GLOBALS['TL_LANG']['MSC']['login_data_not_send'] = 'Unfortunately, the new access could not be sent via email.';

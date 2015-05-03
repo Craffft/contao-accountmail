@@ -12,17 +12,30 @@
 
 namespace Craffft\AccountMail;
 
-class Email
+class Email extends \Controller
 {
+    /**
+     * @var
+     */
     protected $strType;
 
+    /**
+     * @var
+     */
     protected $strForceLanguage;
 
+    /**
+     * @var array
+     */
     protected $arrParameters = array();
 
+    /**
+     * @param $strType
+     * @param null $strForceLanguage
+     */
     public function __construct($strType, $strForceLanguage = null)
     {
-        if (isset($GLOBALS['TL_EMAIL'][$strType])) {
+        if (in_array($strType, $GLOBALS['TL_EMAIL'])) {
             $this->strType = $strType;
         }
 
@@ -33,11 +46,18 @@ class Email
         $this->addParameter('admin_name', \BackendUser::getInstance()->name);
     }
 
+    /**
+     * @param $key
+     * @param $varValue
+     */
     public function addParameter($key, $varValue)
     {
         $this->arrParameters[$key] = $varValue;
     }
 
+    /**
+     * @param $key
+     */
     public function removeParameter($key)
     {
         if (isset($this->arrParameters[$key])) {
@@ -45,6 +65,10 @@ class Email
         }
     }
 
+    /**
+     * @param $strRecipient
+     * @return bool
+     */
     public function sendTo($strRecipient)
     {
         if (!$this->strType) {
@@ -54,23 +78,28 @@ class Email
         $objEmail = new \Email();
 
         $objEmail->from = $GLOBALS['TL_CONFIG']['emailFrom'];
-        $strEmailFromName = \TranslationFields::translateValue($GLOBALS['TL_CONFIG']['emailFromName'], $this->strForceLanguage);
+        $strEmailFromName = \TranslationFields::translateValue(
+            $GLOBALS['TL_CONFIG']['emailFromName'],
+            $this->strForceLanguage
+        );
 
         // Add sender name
-        if ($strEmailFromName != '')
-        {
+        if ($strEmailFromName != '') {
             $objEmail->fromName = $strEmailFromName;
         }
 
+        $strSubject = $this->getContent('subject');
+        $strContent = $this->getContent();
+
         $objEmail->embedImages = true;
         $objEmail->imageDir = TL_ROOT . '/';
-        $objEmail->subject = $this->getSubject();
+        $objEmail->subject = $strSubject;
 
         // Prepare html template
-        $objTemplate = new \BackendTemplate($this->getTemplate());
+        $objTemplate = new \BackendTemplate($this->getEmailTemplate());
 
-        $objTemplate->title = $this->getSubject();
-        $objTemplate->body = $this->getContent();
+        $objTemplate->title = $strSubject;
+        $objTemplate->body = $strContent;
         $objTemplate->charset = $GLOBALS['TL_CONFIG']['characterSet'];
         $objTemplate->css = '';
         $objTemplate->recipient = $strRecipient;
@@ -79,60 +108,74 @@ class Email
         $objEmail->html = $objTemplate->parse();
 
         // Send email
-        try
-        {
+        try {
             $objEmail->sendTo($strRecipient);
-        }
-        catch (\Swift_RfcComplianceException $e)
-        {
+        } catch (\Swift_RfcComplianceException $e) {
             return false;
         }
 
         // Rejected recipients
-        if ($objEmail->hasFailures())
-        {
+        if ($objEmail->hasFailures()) {
             return false;
         }
 
         return true;
     }
 
-    protected function getTemplate()
+    /**
+     * @return mixed
+     */
+    protected function getEmailTemplate()
     {
         if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Template'])) {
             return $GLOBALS['TL_CONFIG'][$this->strType . 'Template'];
         }
     }
 
-    protected function getSubject()
+    /**
+     * @param string $strName
+     * @return string
+     */
+    protected function getContent($strName = 'content')
     {
-        if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'])) {
-            $strSubject = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Subject'], $this->strForceLanguage);
+        $strName = ucfirst(strtolower($strName));
 
-            return $this->replaceParameters($strSubject);
+        if (isset($GLOBALS['TL_CONFIG'][$this->strType . $strName])) {
+            $strContent = \TranslationFields::translateValue(
+                $GLOBALS['TL_CONFIG'][$this->strType . $strName],
+                $this->strForceLanguage
+            );
+
+            $objSession = \Session::getInstance();
+            $objSession->set('ACCOUNTMAIL_PARAMETERS', $this->arrParameters);
+
+            $strContent = $this->replaceInsertTags($strContent, false);
+
+            $objSession->remove('ACCOUNTMAIL_PARAMETERS');
+
+            // Only for deprecated {{blabla}} tags, will be removed in v1.3
+            $strContent = $this->replaceParameters($strContent);
+
+            return $strContent;
         }
     }
 
-    protected function getContent()
-    {
-        if (isset($GLOBALS['TL_CONFIG'][$this->strType . 'Content'])) {
-            $strContent = \TranslationFields::translateValue($GLOBALS['TL_CONFIG'][$this->strType . 'Content'], $this->strForceLanguage);
-
-            return $this->replaceParameters($strContent);
-        }
-    }
-
-    protected function replaceParameters($strContent)
+    /**
+     * @param $strText
+     * @return string
+     * @deprecated
+     */
+    protected function replaceParameters($strText)
     {
         if (is_array($this->arrParameters)) {
             foreach ($this->arrParameters as $key => $varValue) {
-                $strContent = str_replace('{{' . $key . '}}', $varValue, $strContent);
+                $strText = str_replace('{{' . $key . '}}', $varValue, $strText);
             }
         }
 
-        $strContent = \String::parseSimpleTokens($strContent, $this->arrParameters);
-        $strContent = \String::restoreBasicEntities($strContent);
+        $strText = \String::parseSimpleTokens($strText, $this->arrParameters);
+        $strText = \String::restoreBasicEntities($strText);
 
-        return $strContent;
+        return (string)$strText;
     }
 }

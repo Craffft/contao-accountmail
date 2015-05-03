@@ -15,22 +15,10 @@
  */
 $GLOBALS['TL_EMAIL'] = array
 (
-    'emailNewMember' => array
-    (
-        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
-    ),
-    'emailChangedMemberPassword' => array
-    (
-        'parameters' => array('firstname', 'lastname', 'email', 'username', 'password')
-    ),
-    'emailNewUser' => array
-    (
-        'parameters' => array('name', 'email', 'username', 'password')
-    ),
-    'emailChangedUserPassword' => array
-    (
-        'parameters' => array('name', 'email', 'username', 'password')
-    )
+    'emailNewMember',
+    'emailChangedMemberPassword',
+    'emailNewUser',
+    'emailChangedUserPassword'
 );
 
 /**
@@ -266,6 +254,7 @@ $GLOBALS['BE_MOD']['content']['email'] = array
  * source code by registering callback functions to be executed on a particular
  * event. For more information see https://contao.org/manual.html.
  */
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\\Craffft\\AccountMail\\InsertTags', 'replaceInsertTags');
 
 /**
  * AUTO ITEMS

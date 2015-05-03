@@ -13,4 +13,4 @@
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['email'] = 'Email contents';
+$GLOBALS['TL_LANG']['MOD']['email'] = array('Email contents', 'Here you can change the contents of the automatic account emails.');

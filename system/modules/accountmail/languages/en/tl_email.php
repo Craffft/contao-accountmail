@@ -34,11 +34,6 @@ $GLOBALS['TL_LANG']['tl_email']['emailTemplate'] = array('Template', 'Please sel
 $GLOBALS['TL_LANG']['tl_email']['emailContent'] = array('Email content', 'Please enter the content of the email here.');
 
 /**
- * Parameters
+ * Helpwizard
  */
-$GLOBALS['TL_LANG']['tl_email']['parameters']['name'] = array('{{name}}', 'To insert the recipient’s name in the email, use this placeholder.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['firstname'] = array('{{firstname}}', 'To insert the recipient’s first name in the email, use this placeholder.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['lastname'] = array('{{lastname}}', 'To insert the recipient’s last name in the email, use this placeholder.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['email'] = array('{{email}}', 'To insert the recipient’s email address in the email, use this placeholder.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['username'] = array('{{username}}', 'To insert the recipient’s username in the email, use this placeholder.');
-$GLOBALS['TL_LANG']['tl_email']['parameters']['password'] = array('{{password}}', 'To insert the recipient’s password in the email, use this placeholder.');
+$GLOBALS['TL_LANG']['tl_email']['helpwizard'] = array('General description', 'You can use in this field the Contao insert tags and the extension "insert tags".<br><strong>IMPORTANT: Each insert-tag must have the flag "| refresh"</strong>, because otherwise it could lead to erroneous emails.<br>Among other things, you can also use the following wildcards:');

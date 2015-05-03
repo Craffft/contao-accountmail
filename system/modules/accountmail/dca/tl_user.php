@@ -6,21 +6,21 @@
  * Copyright (c) 2014 Daniel Kiesel
  *
  * @package AccountMail
- * @link    https://github.com/icodr8/contao-accountmail
+ * @link    https://github.com/craffft/contao-accountmail
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
 // Config
 $GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'][] = array(
-    'iCodr8\\AccountMail\\User\\Account',
+    'Craffft\\AccountMail\\User\\Account',
     'handlePalettes'
 );
 $GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'][] = array(
-    'iCodr8\\AccountMail\\User\\Account',
+    'Craffft\\AccountMail\\User\\Account',
     'setAutoPassword'
 );
 $GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'][] = array(
-    'iCodr8\\AccountMail\\User\\Account',
+    'Craffft\\AccountMail\\User\\Account',
     'sendPasswordEmail'
 );
 

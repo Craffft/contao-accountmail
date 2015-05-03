@@ -6,17 +6,17 @@
  * Copyright (c) 2014 Daniel Kiesel
  *
  * @package AccountMail
- * @link    https://github.com/icodr8/contao-accountmail
+ * @link    https://github.com/craffft/contao-accountmail
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-namespace iCodr8\AccountMail\Member;
+namespace Craffft\AccountMail\User;
 
-class Account extends \iCodr8\AccountMail\Account
+class Account extends \Craffft\AccountMail\Account
 {
     protected function isDisabledAccountMail(\DataContainer $dc)
     {
-        if ($GLOBALS['TL_CONFIG']['disableMemberAccountMail']) {
+        if ($GLOBALS['TL_CONFIG']['disableUserAccountMail']) {
             return true;
         }
 

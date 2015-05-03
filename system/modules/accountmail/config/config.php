@@ -6,7 +6,7 @@
  * Copyright (c) 2014 Daniel Kiesel
  *
  * @package AccountMail
- * @link    https://github.com/icodr8/contao-accountmail
+ * @link    https://github.com/craffft/contao-accountmail
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -254,7 +254,7 @@ $GLOBALS['BE_MOD']['content']['email'] = array
  * source code by registering callback functions to be executed on a particular
  * event. For more information see https://contao.org/manual.html.
  */
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\\iCodr8\\AccountMail\\InsertTags', 'replaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\\Craffft\\AccountMail\\InsertTags', 'replaceInsertTags');
 
 /**
  * AUTO ITEMS

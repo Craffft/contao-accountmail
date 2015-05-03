@@ -13,7 +13,7 @@
 // Config
 $GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array(
     'Craffft\\AccountMail\\Member\\Account',
-    'handlePalettes'
+    'handlePalettesAndSubpalettes'
 );
 $GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array(
     'Craffft\\AccountMail\\Member\\Account',

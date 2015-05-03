@@ -28,7 +28,7 @@ abstract class Account extends \Controller
     /**
      * @param null $dc
      */
-    public function handlePalettes($dc = null)
+    public function handlePalettesAndSubpalettes($dc = null)
     {
         // Front end call
         if (!$dc instanceof \DataContainer) {
@@ -36,12 +36,24 @@ abstract class Account extends \Controller
         }
 
         if ($this->isDisabledAccountMail($dc)) {
+            // Palettes
             if (is_array($GLOBALS['TL_DCA'][$dc->table]['palettes'])) {
                 foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v) {
                     $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k] = str_replace(
                         ',sendLoginData',
                         '',
                         $GLOBALS['TL_DCA'][$dc->table]['palettes'][$k]
+                    );
+                }
+            }
+
+            // Subpalettes
+            if (is_array($GLOBALS['TL_DCA'][$dc->table]['subpalettes'])) {
+                foreach ($GLOBALS['TL_DCA'][$dc->table]['subpalettes'] as $k => $v) {
+                    $GLOBALS['TL_DCA'][$dc->table]['subpalettes'][$k] = str_replace(
+                        ',sendLoginData',
+                        '',
+                        $GLOBALS['TL_DCA'][$dc->table]['subpalettes'][$k]
                     );
                 }
             }

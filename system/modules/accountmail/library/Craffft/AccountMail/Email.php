@@ -153,29 +153,7 @@ class Email extends \Controller
 
             $objSession->remove('ACCOUNTMAIL_PARAMETERS');
 
-            // Only for deprecated {{blabla}} tags, will be removed in v1.3
-            $strContent = $this->replaceParameters($strContent);
-
             return $strContent;
         }
-    }
-
-    /**
-     * @param $strText
-     * @return string
-     * @deprecated
-     */
-    protected function replaceParameters($strText)
-    {
-        if (is_array($this->arrParameters)) {
-            foreach ($this->arrParameters as $key => $varValue) {
-                $strText = str_replace('{{' . $key . '}}', $varValue, $strText);
-            }
-        }
-
-        $strText = \String::parseSimpleTokens($strText, $this->arrParameters);
-        $strText = \String::restoreBasicEntities($strText);
-
-        return (string)$strText;
     }
 }
